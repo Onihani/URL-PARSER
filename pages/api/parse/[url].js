@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
-
 const { prismaClient } = require("../../../services");
+
+const { fetchWithTimeout } = require("../../../helpers");
 
 const parseUrlHandler = async (req, res) => {
   // get url from request query params
@@ -26,8 +27,11 @@ const parseUrlHandler = async (req, res) => {
 
       // making an api or ajax call url
       // remember to change from http to https before submission
-      const response = await fetch(`http://${url}`);
+      const response = await fetchWithTimeout(`https://${url}`);
+
       const responseText = await response.text();
+
+      // console.log("Response Text", responseText);
 
       // response to be returned to user with default values || placeholder response
       const result = {
@@ -65,13 +69,15 @@ const parseUrlHandler = async (req, res) => {
         },
       });
 
-      // return a success response with
+      prismaClient.$disconnect();
+
+      // return a success response with url info
       return res.status(200).json(newUrlInfo);
     }
   } catch (error) {
-    console.log(error);
+    console.log("Error", error);
     // return an error if there was an error
-    res.status(500);
+    return res.status(404).json({ message: error.message });
   }
 };
 

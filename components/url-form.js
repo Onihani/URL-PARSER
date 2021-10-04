@@ -1,7 +1,14 @@
 import PropTypes from "prop-types";
 import { useRef } from "react";
 
-function UrlForm({ updateResponseData, toggleLoadingStatus, toggleErrorStatus, isLoading }) {
+import axios from "axios";
+
+function UrlForm({
+  updateResponseData,
+  toggleLoadingStatus,
+  toggleErrorStatus,
+  isLoading,
+}) {
   const inputRef = useRef();
 
   const handleSubmitForm = (event) => {
@@ -16,8 +23,9 @@ function UrlForm({ updateResponseData, toggleLoadingStatus, toggleErrorStatus, i
     toggleLoadingStatus(true);
 
     // fetch url info from server
-    fetch(`/api/parse/${url}`)
-      .then((response) => response.json()) // parse json to object
+    axios
+      .get(`/api/parse/${url}`)
+      .then((response) => response.data)
       .then((responseData) => {
         // update responseData state with parsedData from server
         updateResponseData(responseData);
@@ -26,14 +34,14 @@ function UrlForm({ updateResponseData, toggleLoadingStatus, toggleErrorStatus, i
         // update loading state to false (false)
         toggleLoadingStatus(false);
         // update error status to false
-        toggleErrorStatus(false)
+        toggleErrorStatus(false);
       })
       .catch((error) => {
         // handle errors
         console.log(error);
         alert("An error occured while fetching data");
         // update error status to true
-        toggleErrorStatus(true)
+        toggleErrorStatus(true);
         // update responseData state with null
         updateResponseData(null);
         // update loading state to false (false)
@@ -105,7 +113,7 @@ function UrlForm({ updateResponseData, toggleLoadingStatus, toggleErrorStatus, i
 UrlForm.propTypes = {
   updateResponseData: PropTypes.func,
   toggleLoadingStatus: PropTypes.func,
-  toggleErrorStatus:PropTypes.func,
+  toggleErrorStatus: PropTypes.func,
   isLoading: PropTypes.bool,
 };
 

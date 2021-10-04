@@ -119,14 +119,11 @@ function ResponseCard({ isLoading, parsedData }) {
 
 ResponseCard.propTypes = {
   isLoading: PropTypes.bool,
-  parsedData: PropTypes.oneOfType([
-    null,
-    PropTypes.shape({
-      title: PropTypes.string,
-      favicon: PropTypes.string,
-      description: PropTypes.string,
-    }),
-  ]),
+  parsedData: PropTypes.shape({
+    title: PropTypes.string,
+    favicon: PropTypes.string,
+    description: PropTypes.string,
+  }),
 };
 
 export default ResponseCard;
